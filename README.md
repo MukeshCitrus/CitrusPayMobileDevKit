@@ -1,5 +1,5 @@
-open-iOS
-============
+CitrusPayMobileDevKit open-iOS
+==============================
 # PG Prerequisites
 * You need to enroll with Citrus as a merchant.
 * Have an HMAC generator installed on your server
