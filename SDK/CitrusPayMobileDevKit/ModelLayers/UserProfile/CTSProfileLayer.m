@@ -30,7 +30,9 @@ enum {
     ProfileUpdateCashoutBankAccountReqId,
     ProfileGetCashoutBankAccountReqId,
     ProfileGetNewProfileReqId,
-    ProfileUpdateMobileRequestId
+    ProfileUpdateMobileRequestId,
+    ProfileDeleteCardReqId
+
 };
 
 - (instancetype)init {
@@ -44,7 +46,9 @@ enum {
                           toNSString(ProfileUpdateCashoutBankAccountReqId) : toSelector(handleUpdateCashoutAccount:),
                           toNSString(ProfileGetCashoutBankAccountReqId) : toSelector(handleGetCashoutBankAccount:),
                           toNSString(ProfileGetNewProfileReqId) : toSelector(handleGetNewContactProfile:),
-                          toNSString(ProfileUpdateMobileRequestId) : toSelector(handleProfileMobileUpdate:)
+                          toNSString(ProfileUpdateMobileRequestId) : toSelector(handleProfileMobileUpdate:),
+                          toNSString(ProfileDeleteCardReqId):toSelector(handleDeleteCard:)
+
                           };
     
     self = [super initWithRequestSelectorMapping:dic
@@ -374,9 +378,55 @@ enum {
     [restCore requestAsyncServer:request];
 }
 
-
+-(void)requestDeleteCard:(NSString *)lastFourDigits scheme:(NSString *)scheme withCompletionHandler:(ASDeleteCardCallback)callback{
+    [self addCallback:callback forRequestId:ProfileDeleteCardReqId];
+    
+    
+    OauthStatus* oauthStatus = [CTSOauthManager fetchBindSigninTokenStatus];
+    NSString* oauthToken = oauthStatus.oauthToken;
+    
+    if (oauthStatus.error != nil) {
+        oauthStatus = [CTSOauthManager fetchSigninTokenStatus];
+        oauthToken = oauthStatus.oauthToken;
+    }
+    
+    if (oauthStatus.error != nil) {
+        [self deleteCardHelper:oauthStatus.error];
+        return;
+    }
+    
+    //validate last four digits and scheme
+    
+    if(lastFourDigits.length != 4){
+        [self deleteCardHelper:[CTSError getErrorForCode:DeleteCardNumberNotValid]];
+        return;
+    }
+    
+    
+    NSString* deleteCardPath = [NSString stringWithFormat:@"%@/%@:%@",MLC_PROFILE_DELETE_CARD_PATH,lastFourDigits,scheme];
+    
+    CTSRestCoreRequest* request = [[CTSRestCoreRequest alloc]
+                                   initWithPath:deleteCardPath
+                                   requestId:ProfileDeleteCardReqId
+                                   headers:[CTSUtility readOauthTokenAsHeader:oauthToken]
+                                   parameters:nil
+                                   json:nil
+                                   httpMethod:DELETE];
+    
+    [restCore requestAsyncServer:request];
+    
+    
+    
+    
+}
 
 #pragma mark - response handlers methods
+
+-(void)handleDeleteCard:(CTSRestCoreResponse *)response{
+    NSError* error = response.error;
+    [self deleteCardHelper:error];
+}
+
 
 - (void)handleReqProfileGetContact:(CTSRestCoreResponse*)response {
   NSError* error = response.error;
@@ -493,6 +543,18 @@ enum {
 }
 
 #pragma mark - helper methods
+
+- (void)deleteCardHelper:(NSError*)error {
+    ASDeleteCardCallback callback =
+    [self retrieveAndRemoveCallbackForReqId:ProfileDeleteCardReqId];
+    if (callback != nil) {
+        callback(error);
+    } else {
+        [delegate profile:self didDeleteCardWithError:error];
+    }
+}
+
+
 
 - (void)updateContactInfoHelper:(NSError*)error {
   ASUpdateContactInfoCallBack callback =

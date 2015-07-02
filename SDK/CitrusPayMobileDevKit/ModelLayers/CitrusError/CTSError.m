@@ -93,6 +93,10 @@
       case InsufficientBalance:
           errorDescription = @"Insufficient Balance Please add Money in Citrus Account";
           break;
+      case DeleteCardNumberNotValid:
+          errorDescription = @"Card number not valid, last four digits are expected";
+          break;
+
       default:
       break;
   }

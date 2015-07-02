@@ -78,6 +78,10 @@ didReceiveCashoutAccount:(CTSCashoutBankAccountResp *)cashoutAccount  error:(NSE
 @optional
 - (void)profile:(CTSProfileLayer*)profile didGetNewProfile:(CTSNewContactProfile *)profile
           error:(NSError*)error;
+
+@optional
+- (void)profile:(CTSProfileLayer*)profile
+didDeleteCardWithError:(NSError*)error;
 @end
 
 
@@ -110,6 +114,7 @@ typedef void (^ASNewContactProfileCallback)(CTSNewContactProfile* profile, NSErr
 
 typedef void (^ASUpdateMobileNumberCallback)(CTSUpdateMobileNumberRes *updateMobileNumber, NSError* error);
 
+typedef void (^ASDeleteCardCallback)(NSError* error);
 
 /**
  *  update contact related information
