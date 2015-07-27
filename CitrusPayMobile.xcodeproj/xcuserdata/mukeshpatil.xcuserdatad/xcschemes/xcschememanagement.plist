@@ -9,6 +9,11 @@
 			<key>orderHint</key>
 			<integer>0</integer>
 		</dict>
+		<key>CitrusPayMobileSampleApp.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>2</integer>
+		</dict>
 		<key>UniversalCitrusPayMobile.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
@@ -28,6 +33,16 @@
 			<true/>
 		</dict>
 		<key>76D492B71B3AA1CD004393B7</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>76D782991B53BDF300491AF0</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>76D782B11B53BDF300491AF0</key>
 		<dict>
 			<key>primary</key>
 			<true/>

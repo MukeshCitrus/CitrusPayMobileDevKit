@@ -166,4 +166,6 @@ typedef void (^ASDeleteCardCallback)(NSError* error);
  */
 - (void)requestUpdateMobile:(NSString *)mobileNumber WithCompletionHandler:(ASUpdateMobileNumberCallback)callback;
 
+-(void)requestDeleteCard:(NSString *)lastFourDigits scheme:(NSString *)scheme withCompletionHandler:(ASDeleteCardCallback)callback;
+
 @end

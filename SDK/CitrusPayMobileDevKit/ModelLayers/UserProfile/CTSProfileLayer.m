@@ -378,6 +378,7 @@ enum {
     [restCore requestAsyncServer:request];
 }
 
+
 -(void)requestDeleteCard:(NSString *)lastFourDigits scheme:(NSString *)scheme withCompletionHandler:(ASDeleteCardCallback)callback{
     [self addCallback:callback forRequestId:ProfileDeleteCardReqId];
     
